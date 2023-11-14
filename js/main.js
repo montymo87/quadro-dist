@@ -1,11 +1,14 @@
 let $body,
 	windowHeight,
 	windowWidth,
+	stickyEl,
 	degree = 0.0174532925,
 	mediaPoint1 = 1024,
 	mediaPoint2 = 768,
 	mediaPoint3 = 480,
-	mediaPoint4 = 320;
+	mediaPoint4 = 320,
+	$totalPrice,
+	$inputConfigurator;
 const win = document.body;
 
 $(document).ready(function ($) {
@@ -17,9 +20,45 @@ $(document).ready(function ($) {
 	getAllClasses("html", ".elements_list");
 	modal();
 	changeStateColor();
+
+	$inputConfigurator = $(".js-price-trigger");
+	$totalPrice = $(".config_total__price p");
+
+	let startPrice = $(".config_var__item input:checked").siblings("label");
+	$totalPrice.text(startPrice.data("price"));
+
+	$inputConfigurator.on("click", function () {
+		console.log(this.dataset.price);
+		$totalPrice.text(this.dataset.price);
+	});
 });
 
-$(window).on("load", function () {});
+const initPhoneMask = () => {
+	const $phone = document.querySelectorAll(".js-phone-mask input");
+
+	const maskOptions = {
+		mask: "+{7}(000)000-00-00",
+	};
+
+	$phone.forEach((item) => {
+		let mask = IMask(item, maskOptions);
+	});
+};
+
+const popupFancy = () => {
+	Fancybox.bind('[data-fancybox="video-gallery"]', {
+		groupAttr: false,
+	});
+
+	Fancybox.bind('[data-fancybox="gallery"]', {});
+	Fancybox.bind('[data-fancybox="gallery-agreement"]', {});
+};
+
+$(window).on("load", function () {
+	const testCards = gsap.timeline();
+	initPhoneMask();
+	popupFancy();
+});
 
 function updateSizes() {
 	windowWidth = window.innerWidth;
